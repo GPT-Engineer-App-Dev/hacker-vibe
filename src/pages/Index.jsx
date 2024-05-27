@@ -1,18 +1,52 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Link, Text, VStack, HStack, Spacer, Button } from "@chakra-ui/react";
+import { useState } from "react";
 
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+const stories = [
+  { id: 1, title: "Story 1", points: 100, user: "user1", time: "2 hours ago" },
+  { id: 2, title: "Story 2", points: 200, user: "user2", time: "3 hours ago" },
+  { id: 3, title: "Story 3", points: 300, user: "user3", time: "4 hours ago" },
+  // Add more stories as needed
+];
 
 const Index = () => {
+  const [page, setPage] = useState(1);
+
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
+    <Container maxW="container.lg">
+      <Box as="nav" bg="gray.800" color="white" p={4}>
+        <Flex align="center">
+          <Text fontSize="xl" fontWeight="bold">Hacker News</Text>
+          <Spacer />
+          <HStack spacing={4}>
+            <Link href="#" color="white">new</Link>
+            <Link href="#" color="white">past</Link>
+            <Link href="#" color="white">comments</Link>
+            <Link href="#" color="white">ask</Link>
+            <Link href="#" color="white">show</Link>
+            <Link href="#" color="white">jobs</Link>
+            <Link href="#" color="white">submit</Link>
+          </HStack>
+        </Flex>
+      </Box>
+
+      <VStack spacing={4} mt={4}>
+        {stories.map(story => (
+          <Box key={story.id} p={4} borderWidth="1px" borderRadius="md" w="full">
+            <Text fontSize="lg" fontWeight="bold">{story.title}</Text>
+            <HStack spacing={2}>
+              <Text>{story.points} points</Text>
+              <Text>by {story.user}</Text>
+              <Text>{story.time}</Text>
+            </HStack>
+          </Box>
+        ))}
       </VStack>
+
+      <Flex justify="center" mt={4}>
+        <Button onClick={() => setPage(page - 1)} disabled={page === 1}>Previous</Button>
+        <Text mx={4}>Page {page}</Text>
+        <Button onClick={() => setPage(page + 1)}>Next</Button>
+      </Flex>
     </Container>
   );
 };
