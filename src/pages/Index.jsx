@@ -1,18 +1,44 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
-
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+import { useState, useEffect } from "react";
+import { Container, Spinner } from "@chakra-ui/react";
+import NavBar from "../components/NavBar";
+import StoryList from "../components/StoryList";
+import Pagination from "../components/Pagination";
 
 const Index = () => {
+  const [stories, setStories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasNextPage, setHasNextPage] = useState(true);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`https://api.hackerwebapp.com/news?page=${page}`);
+        const data = await response.json();
+        setStories(data);
+        setHasNextPage(data.length > 0);
+      } catch (error) {
+        console.error("Error fetching stories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
+  }, [page]);
+
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
-      </VStack>
+    <Container maxW="container.lg">
+      <NavBar />
+      {loading ? (
+        <Spinner size="xl" mt={8} />
+      ) : (
+        <>
+          <StoryList stories={stories} />
+          <Pagination page={page} setPage={setPage} hasNextPage={hasNextPage} />
+        </>
+      )}
     </Container>
   );
 };
